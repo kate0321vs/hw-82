@@ -21,6 +21,10 @@ const UserSchema = new Schema<IUser, UserModel, IUserMethods>({
     password: {
         type: String,
         required: true,
+    },
+    token: {
+        type: String,
+        required: true,
     }
 });
 
