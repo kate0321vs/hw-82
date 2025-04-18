@@ -21,4 +21,25 @@ usersRouter.post("/", async (req, res, next) => {
     }
 });
 
+usersRouter.post("/sessions", async (req, res, next) => {
+    try {
+        const user = await User.findOne({username: req.body.username});
+        if (!user) {
+            res.status(404).send({error: "Wrong username or password [username]"});
+            return;
+        }
+        const isMatch = await user.checkPassword(req.body.password);
+        if (!isMatch) {
+            res.status(404).send({error: "Wrong username or password [password]"});
+        }
+
+        user.generateToken();
+        await user.save();
+        res.send({message: "Username and password correct", user});
+
+    } catch (e) {
+        next(e);
+    }
+})
+
 export default usersRouter
