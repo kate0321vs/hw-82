@@ -12,7 +12,7 @@ const Link = styled(NavLink)({
 
 const AppToolbar = () => {
   return (
-    <AppBar position="sticky" sx={{mb: 2}}>
+    <AppBar position="sticky" sx={{mb: 4, backgroundColor:"black"}}>
       <Toolbar>
         <Grid container justifyContent="space-between" alignItems="center">
           <Typography variant="h6" component="div">
