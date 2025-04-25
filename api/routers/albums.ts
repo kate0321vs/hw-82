@@ -3,6 +3,7 @@ import Album from "../models/Album";
 import {imagesUpload} from "../multer";
 import mongoose from "mongoose";
 import {IAlbum} from "../types";
+import Track from "../models/Track";
 
 const albumsRouter = express.Router();
 
@@ -11,11 +12,21 @@ albumsRouter.get('/', async (req, res) => {
         const {artist} = req.query;
         let albums
         if (artist) {
-            albums = await Album.find({artist: artist});
+            albums = await Album.find({artist: artist}).sort({year: -1});
         } else {
-            albums = await Album.find();
+            albums = await Album.find().sort({year: -1});
         }
-        res.send(albums);
+
+        const albumsWithTracks = await Promise.all(
+            albums.map(async (album) => {
+                const tracks = await Track.find({ album: album._id });
+                return {
+                    ...album,
+                    tracks: tracks.length
+                };
+            })
+        );
+        res.send(albumsWithTracks);
     } catch (e) {
         res.status(500).send(e)
     }

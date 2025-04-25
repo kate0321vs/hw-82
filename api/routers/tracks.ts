@@ -13,7 +13,7 @@ tracksRouter.get('/', async (req, res) => {
         let tracks;
 
         if (album) {
-            tracks = await Track.find({album: album});
+            tracks = await Track.find({album: album}).sort({ number: +1 });
         } else if (artist) {
              const allTracks = await Track.find().populate('album', 'artist');
              tracks = allTracks.filter(track => {
@@ -21,7 +21,7 @@ tracksRouter.get('/', async (req, res) => {
                  return album.artist.toString() === artist
              })
         } else {
-            tracks = await Track.find()
+            tracks = await Track.find().sort({ number: +1 });
         }
         res.send(tracks);
     } catch (err) {
