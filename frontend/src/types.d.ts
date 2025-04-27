@@ -13,3 +13,18 @@ export interface IAlbums {
     year: number;
     tracks: number;
 }
+
+export interface ITrack {
+    _id: string;
+    name: string;
+    album: {
+        _id: string;
+        name: string;
+        artist: {
+            _id: string;
+            name: string;
+        }
+    };
+    duration: string;
+    number: number
+}

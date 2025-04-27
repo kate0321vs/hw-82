@@ -43,6 +43,7 @@ const Albums = () => {
                                         year={album.year}
                                         image={album.image}
                                         tracksAmount={album.tracks}
+                                        id={album._id}
                                     />
                                 ))}
                             </Grid>

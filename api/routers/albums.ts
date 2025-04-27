@@ -26,7 +26,6 @@ albumsRouter.get('/', async (req, res) => {
                 };
             })
         );
-        console.log(albumsWithTracks);
         res.send(albumsWithTracks);
     } catch (e) {
         res.status(500).send(e);

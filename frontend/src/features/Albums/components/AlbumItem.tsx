@@ -2,15 +2,17 @@ import {Box, Card, CardContent, CardMedia, Typography} from "@mui/material";
 import Grid from "@mui/material/Grid";
 import imageNotAvailable from "../../../assets/images/imageNotAvailable.png";
 import {baseURL} from "../../../globalConstants.ts";
+import {NavLink} from "react-router-dom";
 
 interface Props {
     name: string;
     image: string;
     year: number;
     tracksAmount: number;
+    id: string;
 }
 
-const AlbumItem: React.FC<Props> = ({image, name, year, tracksAmount}) => {
+const AlbumItem: React.FC<Props> = ({image, name, year, tracksAmount, id}) => {
     let albumImage = imageNotAvailable;
 
     if (image) {
@@ -18,7 +20,8 @@ const AlbumItem: React.FC<Props> = ({image, name, year, tracksAmount}) => {
     }
     return (
         <Grid  style={{ width: '45%' }}>
-            <Card sx={{ display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'black', height: '150px' }}>
+            <Card sx={{ display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'black', height: '150px' }}
+                  component={NavLink} to={`/tracks?id_album=${id}`}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
                     <CardContent>
                         <Typography component="div" variant="h5" color="white">
