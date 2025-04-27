@@ -9,26 +9,27 @@ const albumsRouter = express.Router();
 
 albumsRouter.get('/', async (req, res) => {
     try {
-        const {artist} = req.query;
+        const {id_artist} = req.query;
         let albums
-        if (artist) {
-            albums = await Album.find({artist: artist}).sort({year: -1});
+        if (id_artist) {
+            albums = await Album.find({artist: id_artist}).populate('artist', 'name').sort({year: -1});
         } else {
-            albums = await Album.find().sort({year: -1});
+            albums = await Album.find().populate('artist', 'name').sort({year: -1});
         }
 
         const albumsWithTracks = await Promise.all(
             albums.map(async (album) => {
                 const tracks = await Track.find({ album: album._id });
                 return {
-                    ...album,
-                    tracks: tracks.length
+                ...album.toJSON(),
+                tracks: tracks.length
                 };
             })
         );
+        console.log(albumsWithTracks);
         res.send(albumsWithTracks);
     } catch (e) {
-        res.status(500).send(e)
+        res.status(500).send(e);
     }
 });
 
@@ -46,7 +47,7 @@ albumsRouter.post('/', imagesUpload.single('image'), async (req, res, next) => {
         res.send(album);
     } catch (e) {
         if (e instanceof mongoose.Error.ValidationError) {
-            res.status(400).send(e);
+            res.status(400).send(e.message);
         }
         next(e);
     }

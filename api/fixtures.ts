@@ -35,7 +35,7 @@ const run = async () => {
         name: "18",
         artist: Moby,
         year: 2002,
-        image: "fixtures/Moby_play.jpeg",
+        image: "fixtures/Moby18.jpg",
         }, {
         name: "Amniotic",
         artist: Monolink,

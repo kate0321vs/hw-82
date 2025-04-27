@@ -2,7 +2,7 @@ import {Card, CardActionArea, CardContent, CardMedia, Typography} from "@mui/mat
 import Grid from "@mui/material/Grid";
 import imageNotAvailable from '../../../assets/images/imageNotAvailable.png'
 import {baseURL} from "../../../globalConstants.ts";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 interface Props {
     name: string;
@@ -18,12 +18,13 @@ const ArtistItem: React.FC<Props> = ({image, name, id}) => {
    }
 
     return (
-        <Grid >
-            <Card  component={Link} to={'/albums/' + id}>
+        <Grid>
+            <Card  component={NavLink} to={`/albums?id_artist=${id}`}>
                 <CardActionArea/>
                 <CardMedia
                     sx={{height: 300, width: 400}}
                     image={artistImage}
+                    title={name}
                     />
                 <CardContent
                 style={{backgroundColor: 'black', borderRadius: '0 0 10px 10px'}}>
