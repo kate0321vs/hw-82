@@ -1,8 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
 import User from "../models/User";
-import TrackHistory from "../models/TrackHistory";
-import {ITrackHistory} from "../types";
 
 const usersRouter = express.Router();
 
@@ -45,35 +43,6 @@ usersRouter.post("/sessions", async (req, res, next) => {
     }
 });
 
-usersRouter.post('/track_history', async (req, res, next) => {
-   try {
-       const token = req.get("Authorization");
-       if (!token) {
-           res.status(401).send({error: "No token provided"});
-           return;
-       }
-       const user = await User.findOne({token});
-       if (!user) {
-           res.status(401).send({error: "Wrong token"});
-           return;
-       }
 
-       const trackHistory = new TrackHistory<ITrackHistory>({
-           user: user._id,
-           track: req.body.track,
-           datetime: new Date(),
-       });
-
-       await trackHistory.save();
-       res.send(trackHistory);
-
-   } catch (e) {
-       if (e instanceof mongoose.Error.ValidationError) {
-           res.status(400).send(e);
-           return
-       }
-       next(e)
-   }
-})
 
 export default usersRouter

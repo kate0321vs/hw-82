@@ -6,6 +6,7 @@ import {fetchTracks} from "./TracksThunk.ts";
 import {useSearchParams} from "react-router-dom";
 import TrackItem from "./components/TrackItem.tsx";
 import Spinner from "../../components/UI/Spinner/Spinner.tsx";
+import {addToHistory} from "../TrackHistory/TrackHistoryThunk.ts";
 
 const Tracks = () => {
     const dispatch = useAppDispatch();
@@ -23,6 +24,10 @@ const Tracks = () => {
     const albumName = tracks.length > 0 ? tracks[0].album.name : '';
     const artistName = tracks.length > 0 ? tracks[0].album.artist.name : '';
 
+    const addToHistoryTrack = (track: string) => {
+        dispatch(addToHistory(track))
+    }
+
     return (
         loading ? (
             <Spinner/>
@@ -39,6 +44,7 @@ const Tracks = () => {
                                     number={track.number}
                                     name={track.name}
                                     duration={track.duration}
+                                    addToTrackHistory={() => addToHistoryTrack(track._id)}
                                 />
                             ))}
                         </List>
