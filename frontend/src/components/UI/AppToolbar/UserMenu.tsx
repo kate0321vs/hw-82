@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Button, Menu, MenuItem } from '@mui/material';
+import { IconButton, Menu, MenuItem} from '@mui/material';
 import { IUser } from '../../../types';
+import {NavLink} from "react-router-dom";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 interface Props {
   user: IUser;
@@ -19,21 +21,17 @@ const UserMenu: React.FC<Props> = ({user}) => {
 
   return (
     <>
-      <Button
-        onClick={handleClick}
-        color="inherit"
-      >
-        Hello, {user?.username}
-      </Button>
+        <IconButton onClick={handleClick}>
+            <AccountCircleIcon style={{color: 'white', fontSize: '2rem'}} />
+        </IconButton>
       <Menu
         anchorEl={anchorEl}
         keepMounted
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem>Profile</MenuItem>
-        <MenuItem>My account</MenuItem>
-        <MenuItem>Logout</MenuItem>
+          <MenuItem disabled={true}>Hello, {user.username}!</MenuItem>
+        <MenuItem component={NavLink} to='track_history'>Track history</MenuItem>
       </Menu>
     </>
   );

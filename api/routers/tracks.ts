@@ -21,9 +21,16 @@ tracksRouter.get('/', async (req, res) => {
                 }
             }).sort({ number: +1 });
         } else if (artist) {
-             const allTracks = await Track.find().populate('album', 'artist');
+            const allTracks = await Track.find().populate({
+                path: 'album',
+                populate: {
+                    path: 'artist',
+                    model: 'Artist',
+                    select: 'name',
+                }
+            });
              tracks = allTracks.filter(track => {
-                 const album = track.album as { artist: mongoose.Types.ObjectId };
+                 const album = track.album as any;
                  return album.artist.toString() === artist
              })
         } else {

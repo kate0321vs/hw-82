@@ -1,30 +1,38 @@
-import User from "../models/User";
 import TrackHistory from "../models/TrackHistory";
-import {ITrackHistory} from "../types";
+import {IArtist, ITrackHistory} from "../types";
 import mongoose from "mongoose";
 import express from "express";
-import auth from "../middleware/auth";
+import auth, {RequestWithUser} from "../middleware/auth";
+import Track from "../models/Track";
+import Album from "../models/Album";
 
 const trackHistoryRouter = express.Router();
 
+trackHistoryRouter.get('/', auth, async (req, res) => {
+    const user = (req as RequestWithUser).user;
+    const trackHistory = await TrackHistory.find({ user: user._id }).sort({ datetime: -1 }).populate('track').populate('artist');
+    res.send(trackHistory);
+});
+
 trackHistoryRouter.post('/', auth, async (req, res, next) => {
     try {
-        const token = req.get("Authorization");
-        if (!token) {
-            res.status(401).send({error: "No token provided"});
-            return;
-        }
-        const user = await User.findOne({token});
-        if (!user) {
-            res.status(401).send({error: "Wrong token"});
+        const user = (req as RequestWithUser).user;
+        const track = await Track.findById(req.body.track);
+        if (!track) {
+            res.status(404).json({ error: 'Track not found' });
             return;
         }
 
-        console.log(req.body.track)
+        const album = await Album.findById(track.album);
+        if (!album) {
+            res.status(404).json({ error: 'Album not found' });
+            return;
+        }
 
         const trackHistory = new TrackHistory<ITrackHistory>({
             user: user._id,
             track: req.body.track,
+            artist: album.artist,
             datetime: new Date(),
         });
 

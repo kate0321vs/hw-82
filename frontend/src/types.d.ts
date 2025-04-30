@@ -42,7 +42,7 @@ export interface IUser {
 }
 
 export interface RegisterResponse {
-    user: User;
+    user: IUser;
     message: string;
 }
 
@@ -68,7 +68,9 @@ export interface GlobalError {
 }
 
 export interface ITrackHistory {
+    _id: string;
     user: string;
-    track: string;
+    track: ITrack;
+    artist: IArtist;
     datetime: Date;
 }

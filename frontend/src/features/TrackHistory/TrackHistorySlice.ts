@@ -1,15 +1,17 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {RootState} from "../../app/store.ts";
 import {ITrackHistory} from "../../types";
-import {addToHistory} from "./TrackHistoryThunk.ts";
+import {addToHistory, trackHistoryFetch} from "./TrackHistoryThunk.ts";
 
 interface TrackHistoryState {
     trackHistory: ITrackHistory[];
+    addLoading: boolean;
     fetchLoading: boolean;
 }
 
 const initialState: TrackHistoryState = {
     trackHistory: [],
+    addLoading: false,
     fetchLoading: false,
 }
 
@@ -19,12 +21,23 @@ export const TrackHistorySlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder.addCase(addToHistory.pending, (state) => {
-            state.fetchLoading = true;
+            state.addLoading = true;
         });
         builder.addCase(addToHistory.fulfilled, (state) => {
-            state.fetchLoading = false;
+            state.addLoading = false;
         });
         builder.addCase(addToHistory.rejected, (state) => {
+            state.addLoading = false;
+        });
+
+        builder.addCase(trackHistoryFetch.pending, (state) => {
+            state.fetchLoading = true;
+        });
+        builder.addCase(trackHistoryFetch.fulfilled, (state, {payload: trackHistory}) => {
+            state.fetchLoading = false;
+            state.trackHistory = trackHistory;
+        });
+        builder.addCase(trackHistoryFetch.rejected, (state) => {
             state.fetchLoading = false;
         });
     }

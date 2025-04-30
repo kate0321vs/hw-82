@@ -1,6 +1,7 @@
 import {model, Schema, Types} from "mongoose";
 import User from "./User";
 import Track from "./Track";
+import Artist from "./Artist";
 
 const trackHistorySchema = new Schema({
     user: {
@@ -25,6 +26,18 @@ const trackHistorySchema = new Schema({
                 return !!track;
             },
             message: 'Track not found',
+        }]
+    },
+    artist: {
+       type: Types.ObjectId,
+        ref: "Artist",
+        required: true,
+        validate: [{
+            validator: async (value: Types.ObjectId) => {
+                const artist = await Artist.findById(value);
+                return !!artist;
+            },
+            message: 'Artist not found',
         }]
     },
     datetime: {

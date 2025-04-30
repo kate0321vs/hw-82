@@ -27,5 +27,6 @@ export interface IUser {
 export interface ITrackHistory {
     user: ObjectId;
     track: string;
+    artist: ObjectId;
     datetime: Date;
 }
