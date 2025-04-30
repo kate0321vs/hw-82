@@ -1,7 +1,7 @@
-import {Model, model, Schema} from "mongoose";
-import {IUser} from "../types";
-import {randomUUID} from "crypto";
+import {Schema, model, Model, HydratedDocument} from "mongoose";
 import bcrypt from "bcrypt";
+import {randomUUID} from "crypto";
+import {IUser} from "../types";
 
 const SALT_WORK_FACTOR = 10;
 
@@ -12,11 +12,19 @@ interface IUserMethods {
 
 type UserModel = Model<IUser, {}, IUserMethods>
 
-const UserSchema = new Schema<IUser, UserModel, IUserMethods>({
+const UserSchema = new Schema<IUser, UserModel ,IUserMethods>({
     username: {
         type: String,
         required: true,
         unique: true,
+        validate: {
+            validator: async function (this: HydratedDocument<IUser>,username: string): Promise<boolean>  {
+                if (!this.isModified('username')) return true;
+                const user: HydratedDocument<IUser> | null = await User.findOne({ username });
+                return !Boolean(user);
+            },
+            message: 'This user is already registered'
+        }
     },
     password: {
         type: String,
@@ -53,5 +61,3 @@ UserSchema.methods.generateToken = function() {
 
 const User = model<IUser, UserModel>("User", UserSchema);
 export default User;
-
-

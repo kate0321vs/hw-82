@@ -1,6 +1,9 @@
 import { AppBar, styled, Toolbar, Typography} from '@mui/material';
-import Grid from '@mui/material/Grid';
 import { Link as NavLink } from 'react-router-dom';
+import UserMenu from "./UserMenu.tsx";
+import AnonymousMenu from "./AnonymousMenu.tsx";
+import {useAppSelector} from "../../../app/hooks.ts";
+import {selectUser} from "../../../features/Users/usersSlice.ts";
 
 const Link = styled(NavLink)({
   color: 'inherit',
@@ -11,14 +14,15 @@ const Link = styled(NavLink)({
 });
 
 const AppToolbar = () => {
+  const user = useAppSelector(selectUser);
+
   return (
     <AppBar position="sticky" sx={{mb: 4, backgroundColor:"black"}}>
       <Toolbar>
-        <Grid container justifyContent="space-between" alignItems="center">
-          <Typography variant="h6" component="div">
+          <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
             <Link to="/">Music</Link>
           </Typography>
-        </Grid>
+          {user ? <UserMenu user={user}/> : <AnonymousMenu />}
       </Toolbar>
     </AppBar>
   );
