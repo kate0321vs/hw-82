@@ -3,6 +3,14 @@ export interface IArtist {
     name: string;
     image: string;
     information: string;
+    isPublished: boolean;
+}
+
+export interface IArtistMutation {
+    name: string;
+    image: string;
+    information: string;
+    isPublished: boolean;
 }
 
 export interface IAlbums {
@@ -12,6 +20,7 @@ export interface IAlbums {
     image: string;
     year: number;
     tracks: number;
+    isPublished: boolean;
 }
 
 export interface ITrack {
@@ -27,6 +36,7 @@ export interface ITrack {
     };
     duration: string;
     number: number
+    isPublished: boolean;
 }
 
 export interface RegisterMutation {
@@ -39,6 +49,7 @@ export interface IUser {
     username: string;
     password: string;
     token: string;
+    role: string;
 }
 
 export interface RegisterResponse {

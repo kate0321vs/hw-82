@@ -29,6 +29,7 @@ const Artists = () => {
                             key={artist._id}
                             id={artist._id}
                             name={artist.name}
+                            isPublished={artist.isPublished}
                         />
                     ))
                 ) : (

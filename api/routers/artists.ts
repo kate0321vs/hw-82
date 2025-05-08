@@ -56,7 +56,7 @@ artistsRouter.patch('/:id/togglePublished', auth, permit('admin'),async (req, re
         res.status(404).send({error: "Artist not found"});
         return;
     }
-    artist.isPublished = !req.body.isPublished;
+    artist.isPublished = !artist.isPublished;
     await artist.save();
     res.send({ message: "Artist publication status toggled"});
 });

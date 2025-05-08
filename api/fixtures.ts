@@ -3,18 +3,32 @@ import config from "./config";
 import Album from "./models/Album";
 import Track from "./models/Track";
 import Artist from "./models/Artist";
+import User from "./models/User";
 
 const run = async () => {
     await mongoose.connect(config.db);
     const db = mongoose.connection;
 
     try {
+        await db.dropCollection("users");
        await db.dropCollection("artists");
        await db.dropCollection("albums");
        await db.dropCollection("tracks");
     } catch (e) {
         console.log("Collections were not present, skipping drop...");
     }
+
+    const [User1, User2] = await User.create({
+        username: "user",
+        password: "password",
+        role: "user",
+        token: crypto.randomUUID()
+    }, {
+        username: "admin",
+        password: "password",
+        role: "admin",
+        token: crypto.randomUUID()
+    });
 
     const [Moby, Monolink, LanaDelRey] = await Artist.create({
         name: "Moby",
@@ -28,7 +42,7 @@ const run = async () => {
         isPublished: true,
     }, {
         name: "Lana Del Rey",
-        image: "fixtures/lana.jpg",
+        image: "fixtures/lanadelrey.jpg",
         information: "American singer, songwriter, and poet known for her cinematic, melancholic style and nostalgic lyrics that often explore themes of love, glamour, tragedy, and Americana.",
         isPublished: false,
     });
