@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, {model} from "mongoose";
 import Artist from "./Artist";
 
 const AlbumSchema = new mongoose.Schema({
@@ -11,7 +11,7 @@ const AlbumSchema = new mongoose.Schema({
         ref: "Artist",
         required: true,
         validate: [{
-            validator: async (value:  mongoose.Types.ObjectId) => {
+            validator: async (value: mongoose.Types.ObjectId) => {
                 const artist = await Artist.findById(value);
                 return !!artist;
             },
@@ -23,7 +23,12 @@ const AlbumSchema = new mongoose.Schema({
         required: true,
     },
     image: String,
+    isPublished: {
+        type: Boolean,
+        default: false,
+        required: true,
+    }
 });
 
-const Album = mongoose.model('Album', AlbumSchema);
+const Album = model("Album", AlbumSchema);
 export default Album;

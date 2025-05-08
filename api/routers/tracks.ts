@@ -2,6 +2,8 @@ import express from "express";
 import Track from "../models/Track";
 import mongoose from "mongoose";
 import {ITrack} from "../types";
+import auth from "../middleware/auth";
+import permit from "../middleware/permit";
 
 const tracksRouter = express.Router();
 
@@ -42,7 +44,7 @@ tracksRouter.get('/', async (req, res) => {
     }
 });
 
-tracksRouter.post('/', async (req, res, next) => {
+tracksRouter.post('/', auth, async (req, res, next) => {
     try {
         const newTrack: ITrack = {
             name: req.body.name,
@@ -59,6 +61,31 @@ tracksRouter.post('/', async (req, res, next) => {
         }
         next(e);
     }
+});
+
+tracksRouter.delete('/:id', auth, permit('admin'),async (req, res) => {
+    try {
+        const track = await Track.findOne({_id: req.params.id})
+        if (!track) {
+            res.status(404).send({error: "Track not found"});
+            return;
+        }
+        await track.deleteOne();
+        res.send({message: "Track deleted"})
+    } catch (e) {
+        res.status(500).send(e);
+    }
+});
+
+tracksRouter.patch('/:id/togglePublished', auth, permit('admin'),async (req, res) => {
+    const track = await Track.findOne({_id: req.params.id})
+    if (!track) {
+        res.status(404).send({error: "Track not found"});
+        return;
+    }
+    track.isPublished = !req.body.isPublished;
+    await track.save();
+    res.send({ message: "Track publication status toggled"});
 });
 
 export default tracksRouter

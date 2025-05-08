@@ -1,5 +1,5 @@
 import TrackHistory from "../models/TrackHistory";
-import {IArtist, ITrackHistory} from "../types";
+import {ITrackHistory} from "../types";
 import mongoose from "mongoose";
 import express from "express";
 import auth, {RequestWithUser} from "../middleware/auth";

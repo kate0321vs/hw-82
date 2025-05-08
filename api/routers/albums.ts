@@ -4,6 +4,8 @@ import {imagesUpload} from "../multer";
 import mongoose from "mongoose";
 import {IAlbum} from "../types";
 import Track from "../models/Track";
+import auth from "../middleware/auth";
+import permit from "../middleware/permit";
 
 const albumsRouter = express.Router();
 
@@ -32,7 +34,7 @@ albumsRouter.get('/', async (req, res) => {
     }
 });
 
-albumsRouter.post('/', imagesUpload.single('image'), async (req, res, next) => {
+albumsRouter.post('/', auth, imagesUpload.single('image'), async (req, res, next) => {
     try {
         const newAlbum: IAlbum = {
             name: req.body.name,
@@ -58,6 +60,31 @@ albumsRouter.get('/:id', async (req, res) => {
         res.sendStatus(404);
     }
     res.send(album);
-})
+});
+
+albumsRouter.delete('/:id', auth, permit('admin'),async (req, res) => {
+   try {
+       const album = await Album.findOne({_id: req.params.id})
+       if (!album) {
+           res.status(404).send({error: "Album not found"});
+           return;
+       }
+       await album.deleteOne();
+       res.send({message: "Album deleted"})
+   } catch (e) {
+       res.status(500).send(e);
+   }
+});
+
+albumsRouter.patch('/:id/togglePublished', auth, permit('admin'),async (req, res) => {
+    const album = await Album.findOne({_id: req.params.id})
+    if (!album) {
+        res.status(404).send({error: "Album not found"});
+        return;
+    }
+    album.isPublished = !req.body.isPublished;
+    await album.save();
+    res.send({ message: "Album publication status toggled"});
+});
 
 export default albumsRouter;

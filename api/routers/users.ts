@@ -43,6 +43,30 @@ usersRouter.post("/sessions", async (req, res, next) => {
     }
 });
 
+usersRouter.delete('/sessions', async (req, res, next) => {
+
+    try {
+        const token = req.get('Authorization');
+        const success = {message: 'Success'};
+        if (!token) {
+            res.send(success);
+            return;
+        }
+
+        const user = await User.findOne({token});
+        if (!user) {
+            res.send(success);
+            return;
+        }
+
+        user.generateToken();
+        user.save();
+        res.send(success);
+        return;
+    } catch (e) {
+        return next(e);
+    }
+});
 
 
 export default usersRouter

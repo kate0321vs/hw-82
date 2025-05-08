@@ -21,6 +21,7 @@ export interface ITrack {
 export interface IUser {
     username: string;
     password: string;
+    role: string;
     token: string;
 }
 
