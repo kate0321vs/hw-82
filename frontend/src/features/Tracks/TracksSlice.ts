@@ -1,11 +1,12 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {RootState} from "../../app/store.ts";
 import {ITrack} from "../../types";
-import {deleteTrack, fetchTracks, makePublicTrack} from "./TracksThunk.ts";
+import {createTrack, deleteTrack, fetchTracks, makePublicTrack} from "./TracksThunk.ts";
 
 interface TracksState {
     tracks: ITrack[];
     fetchLoading: boolean;
+    createLoading: boolean;
     publicLoading: boolean | string;
     deleteLoading: boolean | string;
 }
@@ -13,6 +14,7 @@ interface TracksState {
 const initialState: TracksState = {
     tracks: [],
     fetchLoading: false,
+    createLoading: false,
     publicLoading: false,
     deleteLoading: false,
 }
@@ -31,6 +33,16 @@ export const TracksSlice = createSlice({
         });
         builder.addCase(fetchTracks.rejected, (state) => {
             state.fetchLoading = false;
+        });
+
+        builder.addCase(createTrack.pending, (state) => {
+            state.deleteLoading = true;
+        });
+        builder.addCase(createTrack.fulfilled, (state) => {
+            state.deleteLoading = false;
+        });
+        builder.addCase(createTrack.rejected, (state) => {
+            state.deleteLoading = false;
         });
 
         builder.addCase(makePublicTrack.pending, (state, action) => {
@@ -60,3 +72,4 @@ export const selectTracks = (state: RootState) => state.tracks.tracks;
 export const fetchLoadingTracks = (state: RootState) => state.tracks.fetchLoading;
 export const selectPublicTrackLoader = (state: RootState) => state.tracks.publicLoading;
 export const selectDeleteTrackLoader = (state: RootState) => state.tracks.deleteLoading;
+export const selectCreateTrackLoader = (state: RootState) => state.tracks.createLoading;

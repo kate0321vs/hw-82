@@ -1,11 +1,12 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {RootState} from "../../app/store.ts";
 import {IAlbums} from "../../types";
-import {deleteAlbum, fetchAlbums, makePublicAlbum} from "./AlbumsThunk.ts";
+import {createAlbum, deleteAlbum, fetchAlbums, makePublicAlbum} from "./AlbumsThunk.ts";
 
 interface AlbumsState {
     albums: IAlbums[];
     fetchLoading: boolean;
+    createLoading: boolean;
     publicLoading: boolean | string;
     deleteLoading: boolean | string
 }
@@ -13,6 +14,7 @@ interface AlbumsState {
 const initialState: AlbumsState = {
     albums: [],
     fetchLoading: false,
+    createLoading: false,
     publicLoading: false,
     deleteLoading: false
 }
@@ -31,6 +33,16 @@ export const AlbumsSlice = createSlice({
         });
         builder.addCase(fetchAlbums.rejected, (state) => {
             state.fetchLoading = false;
+        });
+
+        builder.addCase(createAlbum.pending, (state) => {
+            state.createLoading = true;
+        });
+        builder.addCase(createAlbum.fulfilled, (state) => {
+            state.createLoading = false;
+        });
+        builder.addCase(createAlbum.rejected, (state) => {
+            state.createLoading = false;
         });
 
         builder.addCase(makePublicAlbum.pending, (state, action) => {
@@ -60,3 +72,4 @@ export const selectAlbums = (state: RootState) => state.albums.albums;
 export const fetchLoadingAlbums = (state: RootState) => state.albums.fetchLoading;
 export const selectPublicAlbumLoader = (state: RootState) => state.albums.publicLoading;
 export const selectDeleteAlbumLoader = (state: RootState) => state.albums.deleteLoading;
+export const selectCreateAlbumLoader = (state: RootState) => state.albums.createLoading;

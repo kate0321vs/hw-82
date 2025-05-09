@@ -1,6 +1,6 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import axiosApi from "../../axiosApi.ts";
-import {IAlbums} from "../../types";
+import {IAlbumMutation, IAlbums} from "../../types";
 import {RootState} from "../../app/store.ts";
 
 export const fetchAlbums = createAsyncThunk<IAlbums[], string | null, {state: RootState}>(
@@ -14,6 +14,23 @@ export const fetchAlbums = createAsyncThunk<IAlbums[], string | null, {state: Ro
             return albums.filter(album => album.isPublished);
         }
         return albums;
+    }
+);
+
+export const createAlbum = createAsyncThunk<void, IAlbumMutation>(
+    "albums/create",
+    async (album) => {
+        const formData = new FormData();
+        const keys = Object.keys(album) as (keyof IAlbumMutation)[];
+
+        keys.forEach((key) => {
+            const value = album[key];
+
+            if (value !== null) {
+                formData.append(key, value);
+            }
+        });
+        await axiosApi.post('/albums', formData);
     }
 );
 

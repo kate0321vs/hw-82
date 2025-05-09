@@ -19,7 +19,7 @@ const Artists = () => {
     return (
         <>
             <Typography variant='h4' mb={3}>Artists</Typography>
-            <Grid container spacing={2}>
+            <Grid container spacing={2} mb={3}>
                 {loading ? (
                     <Spinner />
                 ) : artists && artists.length > 0 ? (

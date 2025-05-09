@@ -1,14 +1,15 @@
 import { Button, TextField } from '@mui/material';
+import {useEffect, useRef, useState} from 'react';
 import Grid from '@mui/material/Grid';
-import { useRef, useState } from 'react';
 
 interface Props {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   name: string;
   label: string;
+  file: File | null;
 }
 
-const FileInput: React.FC<Props> = ({ onChange, name, label}) => {
+const FileInput: React.FC<Props> = ({ onChange, name, label, file}) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState('');
 
@@ -21,28 +22,36 @@ const FileInput: React.FC<Props> = ({ onChange, name, label}) => {
     onChange(e);
   }
 
+  useEffect(() => {
+    if (!file) {
+      setFileName("");
+    } else {
+      setFileName(file.name);
+    }
+  }, [file]);
+
   const activateInput = () => {
     if(inputRef.current) {
       inputRef.current.click();
     }
-  }
+  };
 
   return (
-    <>
-      <input type="file"
-      ref={inputRef} name={name}
-      style={{ display: 'none' }}
-      onChange={onFileChange}/>
+      <>
+        <input type="file"
+               ref={inputRef} name={name}
+               style={{ display: 'none' }}
+               onChange={onFileChange}/>
 
-      <Grid container direction='row' spacing={2} alignItems='center'>
-        <Grid sx={{ flexGrow: 1 }}>
-          <TextField value={fileName} label={label} disabled/>
+        <Grid container spacing={2} alignItems="center" sx={{ width: '100%' }}>
+          <Grid  sx={{ flexGrow: 1 }}>
+            <TextField value={fileName} label={label} disabled fullWidth/>
+          </Grid>
+          <Grid>
+            <Button sx={{backgroundColor: 'orangered'}} variant="contained" onClick={activateInput}>Browse</Button>
+          </Grid>
         </Grid>
-        <Grid>
-          <Button variant="contained" onClick={activateInput}>Browse</Button>
-        </Grid>
-      </Grid>
-    </>
+      </>
   );
 };
 

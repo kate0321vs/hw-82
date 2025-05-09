@@ -19,11 +19,12 @@ interface Props {
 }
 
 const ArtistItem: React.FC<Props> = ({image, name, id, isPublished}) => {
-    let artistImage = imageNotAvailable;
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectUser);
     const deleteLoading = useAppSelector(selectDeleteArtistLoading);
     const publishLoading = useAppSelector(selectPublishedLoading)
+
+    let artistImage = imageNotAvailable;
 
     if (image) {
         artistImage = baseURL + '/' + image;

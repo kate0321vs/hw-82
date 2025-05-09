@@ -1,5 +1,5 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import { ITrack } from "../../types";
+import {ITrack, ITrackMutation} from "../../types";
 import axiosApi from "../../axiosApi.ts";
 import {RootState} from "../../app/store.ts";
 
@@ -14,6 +14,13 @@ export const fetchTracks = createAsyncThunk<ITrack[], string | null, { state: Ro
             return tracks.filter(track => track.isPublished);
         }
         return tracks;
+    }
+);
+
+export const createTrack = createAsyncThunk<void, ITrackMutation>(
+    "tracks/create",
+    async (track) => {
+        await axiosApi.post('/tracks', track);
     }
 );
 

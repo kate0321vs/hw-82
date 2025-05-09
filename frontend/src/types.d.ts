@@ -6,11 +6,10 @@ export interface IArtist {
     isPublished: boolean;
 }
 
-export interface IArtistMutation {
+export interface IMutationArtist {
     name: string;
-    image: string;
+    image: File | null;
     information: string;
-    isPublished: boolean;
 }
 
 export interface IAlbums {
@@ -21,6 +20,13 @@ export interface IAlbums {
     year: number;
     tracks: number;
     isPublished: boolean;
+}
+
+export interface IAlbumMutation {
+    artist: string;
+    name: string;
+    image: File | null;
+    year: string;
 }
 
 export interface ITrack {
@@ -37,6 +43,12 @@ export interface ITrack {
     duration: string;
     number: number
     isPublished: boolean;
+}
+
+export interface ITrackMutation {
+    name: string;
+    album: string;
+    duration: string;
 }
 
 export interface RegisterMutation {

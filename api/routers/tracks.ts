@@ -46,11 +46,13 @@ tracksRouter.get('/', async (req, res) => {
 
 tracksRouter.post('/', auth, async (req, res, next) => {
     try {
+        const tracks = await Track.find({album: req.body.album});
+
         const newTrack: ITrack = {
             name: req.body.name,
             album: req.body.album,
             duration: req.body.duration,
-            number: req.body.number,
+            number: tracks.length + 1,
         }
         const track = new Track(newTrack);
         await track.save();

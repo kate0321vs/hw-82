@@ -1,13 +1,14 @@
 import {IArtist} from "../../types";
 import {createSlice} from "@reduxjs/toolkit";
 import {RootState} from "../../app/store.ts";
-import {deleteArtist, fetchArtists, makePublish} from "./ArtistsThunk.ts";
+import {createArtist, deleteArtist, fetchArtists, makePublish} from "./ArtistsThunk.ts";
 
 interface ArtistsState {
     artists: IArtist[];
     fetchLoading: boolean;
     deleteLoading: boolean | string;
     publishedLoading: boolean | string;
+    createLoading: boolean;
 }
 
 const initialState: ArtistsState = {
@@ -15,6 +16,7 @@ const initialState: ArtistsState = {
     fetchLoading: false,
     deleteLoading: false,
     publishedLoading: false,
+    createLoading: false,
 }
 
 export const ArtistsSlice = createSlice({
@@ -33,9 +35,18 @@ export const ArtistsSlice = createSlice({
             state.fetchLoading = false;
         });
 
+        builder.addCase(createArtist.pending, (state) => {
+            state.createLoading = true;
+        });
+        builder.addCase(createArtist.fulfilled, (state) => {
+            state.createLoading = false;
+        });
+        builder.addCase(createArtist.rejected, (state) => {
+            state.createLoading = false;
+        });
+
         builder.addCase(makePublish.pending, (state, action) => {
             state.publishedLoading = action.meta.arg;
-
         });
         builder.addCase(makePublish.fulfilled, (state) => {
             state.publishedLoading = true;
@@ -61,3 +72,4 @@ export const selectArtists = (state: RootState) => state.artists.artists;
 export const fetchLoadingArtists = (state: RootState) => state.artists.fetchLoading;
 export const selectDeleteArtistLoading = (state: RootState) => state.artists.deleteLoading;
 export const selectPublishedLoading = (state: RootState) => state.artists.publishedLoading;
+export const selectCreateLoading = (state: RootState) => state.artists.createLoading;

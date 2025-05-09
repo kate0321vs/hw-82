@@ -10,7 +10,6 @@ export interface RequestWithUser extends Request {
 const auth = async (expressReq: Request, res: Response, next: NextFunction) => {
     const req = expressReq as RequestWithUser;
     const token = req.get("Authorization");
-    console.log(token);
     if (!token) {
         res.status(400).send({error: "No token provided"});
         return;

@@ -1,5 +1,5 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import {IArtist} from "../../types";
+import {IArtist, IMutationArtist} from "../../types";
 import axiosApi from "../../axiosApi.ts";
 import {RootState} from "../../app/store.ts";
 
@@ -13,6 +13,23 @@ export const fetchArtists = createAsyncThunk<IArtist[], void ,{state: RootState 
             return artists.filter(artist => artist.isPublished);
         }
         return artists;
+    }
+);
+
+export const createArtist = createAsyncThunk<void, IMutationArtist>(
+    "artists/create",
+    async (artist) => {
+        const formData = new FormData();
+        const keys = Object.keys(artist) as (keyof IMutationArtist)[];
+
+        keys.forEach((key) => {
+            const value = artist[key];
+
+            if (value !== null) {
+                formData.append(key, value);
+            }
+        });
+        await axiosApi.post('/artists', formData);
     }
 );
 
