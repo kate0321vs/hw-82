@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import { RegisterMutation } from '../../types';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { Avatar, Box, Button, Container, Link, TextField, Typography } from '@mui/material';
+import {Avatar, Box, Button, CircularProgress, Container, Link, TextField, Typography} from '@mui/material';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
-import { selectRegisterError } from './usersSlice.ts';
+import { selectRegisterError, selectRegisterLoading } from './usersSlice.ts';
 import { register } from './usersThunk.ts';
+import {toast} from "react-toastify";
 
 const Register = () => {
   const dispatch = useAppDispatch();
   const error = useAppSelector(selectRegisterError);
   const navigate = useNavigate();
+  const loading = useAppSelector(selectRegisterLoading);
 
   const [state, setState] = useState<RegisterMutation>({
     username: '',
@@ -29,6 +31,7 @@ const Register = () => {
     event.preventDefault();
     try {
       await dispatch(register(state)).unwrap();
+      toast.success('User registered successfully');
       navigate('/');
     } catch (e) {
       // error happened
@@ -93,6 +96,7 @@ const Register = () => {
             fullWidth
             variant="contained"
             sx={{mt: 3, mb: 2}}
+            endIcon={loading && <CircularProgress size={24} />}
           >
             Sign Up
           </Button>
