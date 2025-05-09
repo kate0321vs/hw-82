@@ -44,6 +44,8 @@ const Albums = () => {
                                         image={album.image}
                                         tracksAmount={album.tracks}
                                         id={album._id}
+                                        isPublished={album.isPublished}
+                                        artistId={id_artist}
                                     />
                                 ))}
                             </Grid>

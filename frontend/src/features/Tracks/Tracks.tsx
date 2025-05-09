@@ -45,6 +45,9 @@ const Tracks = () => {
                                     name={track.name}
                                     duration={track.duration}
                                     addToTrackHistory={() => addToHistoryTrack(track._id)}
+                                    isPublished={track.isPublished}
+                                    id={track._id}
+                                    albumId={id_album}
                                 />
                             ))}
                         </List>

@@ -33,7 +33,7 @@ const ArtistItem: React.FC<Props> = ({image, name, id, isPublished}) => {
         if  (window.confirm(`Delete artist "${name}"?`)) {
             await dispatch(deleteArtist(id));
             await dispatch(fetchArtists());
-            toast.success('Artist was added Successfully!');
+            toast.success('Artist was deleted Successfully!');
         }
     };
 
@@ -66,9 +66,12 @@ const ArtistItem: React.FC<Props> = ({image, name, id, isPublished}) => {
                         <Typography style={{color: "white", fontSize: "22px", flexGrow: 1}}>{name}</Typography>
                         {user && user.role === 'admin' &&
                             <>{!isPublished && (
-                                <IconButton title='Published' onClick={onPublished}>
-                                    {publishLoading === id ? <CircularProgress size={22}/> : <CheckCircleIcon color='warning'/> }
-                                </IconButton>
+                                <>
+                                    <Typography variant="body2" color="warning" pr={1}>Unpublished</Typography>
+                                    <IconButton title='Public' onClick={onPublished}>
+                                        {publishLoading === id ? <CircularProgress size={22}/> : <CheckCircleIcon color='warning'/> }
+                                    </IconButton>
+                                </>
                             )}
                                 <IconButton onClick={onDelete}
                                     title="Delete">

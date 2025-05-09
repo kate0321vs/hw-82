@@ -82,7 +82,7 @@ albumsRouter.patch('/:id/togglePublished', auth, permit('admin'),async (req, res
         res.status(404).send({error: "Album not found"});
         return;
     }
-    album.isPublished = !req.body.isPublished;
+    album.isPublished = !album.isPublished;
     await album.save();
     res.send({ message: "Album publication status toggled"});
 });

@@ -3,12 +3,16 @@ import { IconButton, Menu, MenuItem} from '@mui/material';
 import { IUser } from '../../../types';
 import {NavLink} from "react-router-dom";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import {useAppDispatch} from "../../../app/hooks.ts";
+import {logout} from "../../../features/Users/usersThunk.ts";
+import {fetchArtists} from "../../../features/Artists/ArtistsThunk.ts";
 
 interface Props {
   user: IUser;
 }
 
 const UserMenu: React.FC<Props> = ({user}) => {
+    const dispatch = useAppDispatch();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -18,6 +22,11 @@ const UserMenu: React.FC<Props> = ({user}) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+    const handleLogout = async () => {
+        await dispatch(logout());
+        await dispatch(fetchArtists());
+    }
 
   return (
     <>
@@ -32,6 +41,7 @@ const UserMenu: React.FC<Props> = ({user}) => {
       >
           <MenuItem disabled={true}>Hello, {user.username}!</MenuItem>
         <MenuItem component={NavLink} to='track_history'>Track history</MenuItem>
+          <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
     </>
   );

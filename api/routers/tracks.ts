@@ -83,7 +83,7 @@ tracksRouter.patch('/:id/togglePublished', auth, permit('admin'),async (req, res
         res.status(404).send({error: "Track not found"});
         return;
     }
-    track.isPublished = !req.body.isPublished;
+    track.isPublished = !track.isPublished;
     await track.save();
     res.send({ message: "Track publication status toggled"});
 });
