@@ -12,7 +12,7 @@ const ArtistSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
         required: true,
-    }
+    },
 });
 
 const Artist = mongoose.model('Artist', ArtistSchema);

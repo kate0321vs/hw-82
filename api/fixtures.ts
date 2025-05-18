@@ -22,11 +22,13 @@ const run = async () => {
         username: "user",
         password: "password",
         role: "user",
+        displayName: "John",
         token: crypto.randomUUID()
     }, {
         username: "admin",
         password: "password",
         role: "admin",
+        displayName: "Jane",
         token: crypto.randomUUID()
     });
 

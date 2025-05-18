@@ -6,6 +6,8 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import {useAppDispatch} from "../../../app/hooks.ts";
 import {logout} from "../../../features/Users/usersThunk.ts";
 import {fetchArtists} from "../../../features/Artists/ArtistsThunk.ts";
+import Avatar from '@mui/material/Avatar';
+import {baseURL} from "../../../globalConstants.ts";
 
 interface Props {
   user: IUser;
@@ -31,7 +33,9 @@ const UserMenu: React.FC<Props> = ({user}) => {
   return (
     <>
         <IconButton onClick={handleClick}>
-            <AccountCircleIcon style={{color: 'white', fontSize: '2rem'}} />
+            {user.avatar ?
+            <Avatar src={user.googleID ? user.avatar : `${baseURL}/${user.avatar}`} alt={`${user.displayName} picture`} /> :
+            <AccountCircleIcon fontSize='large' style={{color: 'white', fontSize: '2rem'}} />}
         </IconButton>
       <Menu
         anchorEl={anchorEl}
@@ -39,7 +43,7 @@ const UserMenu: React.FC<Props> = ({user}) => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-          <MenuItem disabled={true}>Hello, {user.username}!</MenuItem>
+          <MenuItem disabled={true}>Hello, {user.displayName}!</MenuItem>
         <MenuItem component={NavLink} to='track_history'>Track history</MenuItem>
           <MenuItem component={NavLink} to='artists/new'>Add Artist</MenuItem>
           <MenuItem component={NavLink} to='albums/new'>Add Album</MenuItem>

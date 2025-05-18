@@ -6,8 +6,10 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
 import { selectRegisterError, selectRegisterLoading } from './usersSlice.ts';
-import { register } from './usersThunk.ts';
+import {googleLogin, register} from './usersThunk.ts';
 import {toast} from "react-toastify";
+import {GoogleLogin} from "@react-oauth/google";
+import FileInput from "../../components/UI/FileInput/FileInput.tsx";
 
 const Register = () => {
   const dispatch = useAppDispatch();
@@ -17,8 +19,15 @@ const Register = () => {
 
   const [state, setState] = useState<RegisterMutation>({
     username: '',
-    password: ''
+    password: '',
+    avatar: null,
+    displayName: '',
   });
+
+  const googleLoginHandler = async (credential: string) => {
+    await dispatch(googleLogin(credential)).unwrap();
+    navigate('/');
+  };
 
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value} = event.target;
@@ -43,6 +52,16 @@ const Register = () => {
       return error?.errors[name].message;
     } catch {
       return undefined;
+    }
+  };
+
+  const filesInputChangeHandler = (e: React.ChangeEvent<HTMLInputElement> ) => {
+    const { name, files } = e.target;
+    if (files) {
+      setState(prevState => {
+        return {...prevState,
+          [name]: files[0]};
+      })
     }
   };
 
@@ -74,6 +93,7 @@ const Register = () => {
                 error={!!getFieldError('username')}
                 helperText={getFieldError('username')}
                 fullWidth
+                required
               />
             </Grid>
             <Grid size={12}>
@@ -87,9 +107,24 @@ const Register = () => {
                 error={!!getFieldError('password')}
                 helperText={getFieldError('password')}
                 fullWidth
+                required
               />
               {!!getFieldError('password') && <span>{getFieldError('password')}</span>}
             </Grid>
+          </Grid>
+          <Grid sx={{pt:2}}>
+            <TextField
+                id="displayName"
+                label="Display Name"
+                value={state.displayName}
+                onChange={inputChangeHandler}
+                name="displayName"
+                fullWidth
+                required
+            />
+          </Grid>
+          <Grid sx={{pt:2}}>
+            <FileInput onChange={filesInputChangeHandler} name="avatar" label="Avatar" file={state.avatar}/>
           </Grid>
           <Button
             type="submit"
@@ -100,14 +135,23 @@ const Register = () => {
           >
             Sign Up
           </Button>
-          <Grid container justifyContent="flex-end">
-            <Grid>
-              <Link component={RouterLink} to="/login" variant="body2">
-                Already have an account? Sign in
-              </Link>
-            </Grid>
-          </Grid>
         </Box>
+        <Box>
+          <GoogleLogin
+              onSuccess={(credentialResponse) => {
+                if (credentialResponse.credential) {
+
+                  void googleLoginHandler(credentialResponse.credential);
+                }
+              }}
+              onError={() => {
+                console.log('Login Failed');
+              }}
+          />
+        </Box>
+        <Link sx={{pt: 2}} component={RouterLink} to="/login" variant="body2">
+          Already have an account? Sign in
+        </Link>
       </Box>
     </Container>
   );

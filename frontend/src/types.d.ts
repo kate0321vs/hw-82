@@ -4,6 +4,7 @@ export interface IArtist {
     image: string;
     information: string;
     isPublished: boolean;
+    user: string;
 }
 
 export interface IMutationArtist {
@@ -20,6 +21,7 @@ export interface IAlbums {
     year: number;
     tracks: number;
     isPublished: boolean;
+    user: string;
 }
 
 export interface IAlbumMutation {
@@ -43,6 +45,7 @@ export interface ITrack {
     duration: string;
     number: number
     isPublished: boolean;
+    user: string;
 }
 
 export interface ITrackMutation {
@@ -54,6 +57,8 @@ export interface ITrackMutation {
 export interface RegisterMutation {
     username: string;
     password: string;
+    avatar: File | null;
+    displayName: string;
 }
 
 export interface IUser {
@@ -62,6 +67,9 @@ export interface IUser {
     password: string;
     token: string;
     role: string;
+    displayName: string;
+    avatar: string;
+    googleID: string;
 }
 
 export interface RegisterResponse {

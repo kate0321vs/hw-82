@@ -10,9 +10,11 @@ export const fetchTracks = createAsyncThunk<ITrack[], string | null, { state: Ro
         const response = await axiosApi.get("/tracks", {
             params: id_album ? { id_album } : undefined});
         const tracks: ITrack[] = response.data;
+
         if (user && user.role === "user" || !user) {
             return tracks.filter(track => track.isPublished);
         }
+
         return tracks;
     }
 );

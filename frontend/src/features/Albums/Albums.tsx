@@ -1,7 +1,6 @@
 import {Typography} from "@mui/material";
-import {fetchLoadingArtists} from "../Artists/ArtistsSlice.ts";
 import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
-import {selectAlbums} from "./AlbumsSlice.ts";
+import {fetchLoadingAlbums, selectAlbums} from "./AlbumsSlice.ts";
 import {fetchAlbums} from "./AlbumsThunk.ts";
 import {useEffect} from "react";
 import Spinner from "../../components/UI/Spinner/Spinner.tsx";
@@ -13,7 +12,7 @@ import { useSearchParams } from "react-router-dom";
 const Albums = () => {
     const dispatch = useAppDispatch();
     const albums = useAppSelector(selectAlbums);
-    const loading = useAppSelector(fetchLoadingArtists);
+    const loading = useAppSelector(fetchLoadingAlbums);
     const [searchParams] = useSearchParams();
     const id_artist = searchParams.get("id_artist");
 

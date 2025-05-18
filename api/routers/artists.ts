@@ -1,9 +1,9 @@
 import express from "express";
 import Artist from "../models/Artist";
 import mongoose from "mongoose";
-import {imagesUpload} from "../multer";
+import {imagesUpload} from "../middleware/multer";
 import {IArtist} from "../types";
-import auth from "../middleware/auth";
+import auth, {RequestWithUser} from "../middleware/auth";
 import permit from "../middleware/permit";
 
 const artistsRouter = express.Router();
@@ -19,10 +19,12 @@ artistsRouter.get('/', async (req, res) => {
 
 artistsRouter.post('/', auth, imagesUpload.single('image'), async (req, res, next) => {
     try {
+        const user = (req as RequestWithUser).user;
         const newArtist: IArtist = {
             name: req.body.name,
             image: req.file ? 'images/' + req.file.filename : null,
             information: req.body.information,
+            user: user._id,
         };
 
         const artist  = new Artist(newArtist);

@@ -11,7 +11,7 @@ const AlbumSchema = new mongoose.Schema({
         ref: "Artist",
         required: true,
         validate: [{
-            validator: async (value: mongoose.Types.ObjectId) => {
+            validator: async (value:  mongoose.Types.ObjectId) => {
                 const artist = await Artist.findById(value);
                 return !!artist;
             },
@@ -27,7 +27,7 @@ const AlbumSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
         required: true,
-    }
+    },
 });
 
 const Album = model("Album", AlbumSchema);

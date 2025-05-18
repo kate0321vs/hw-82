@@ -6,9 +6,10 @@ import Grid from '@mui/material/Grid';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
 import {selectLoginError, selectLoginLoading} from './usersSlice.ts';
-import { login } from './usersThunk.ts';
+import {googleLogin, login} from './usersThunk.ts';
 import Alert from '@mui/material/Alert';
 import {toast} from "react-toastify";
+import {GoogleLogin} from "@react-oauth/google";
 
 
 
@@ -22,6 +23,12 @@ const Login = () => {
     username: '',
     password: '',
   });
+
+  const googleLoginHandler = async (credential: string) => {
+    await dispatch(googleLogin(credential)).unwrap();
+    navigate('/');
+
+  };
 
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value} = event.target;
@@ -96,14 +103,23 @@ const Login = () => {
           >
             Sign In
           </Button>
-          <Grid container justifyContent="flex-end">
-            <Grid>
-              <Link component={RouterLink} to="/register" variant="body2">
-                Or sign up
-              </Link>
-            </Grid>
-          </Grid>
         </Box>
+        <Box>
+          <GoogleLogin
+              onSuccess={(credentialResponse) => {
+                if (credentialResponse.credential) {
+
+                  void googleLoginHandler(credentialResponse.credential);
+              }
+              }}
+              onError={() => {
+                console.log('Login Failed');
+              }}
+          />
+        </Box>
+            <Link sx={{pt: 2}} component={RouterLink} to="/register" variant="body2">
+              Or sign up
+            </Link>
       </Box>
     </Container>
   );

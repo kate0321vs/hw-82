@@ -2,7 +2,7 @@ import express from "express";
 import Track from "../models/Track";
 import mongoose from "mongoose";
 import {ITrack} from "../types";
-import auth from "../middleware/auth";
+import auth, {RequestWithUser} from "../middleware/auth";
 import permit from "../middleware/permit";
 
 const tracksRouter = express.Router();
@@ -47,12 +47,13 @@ tracksRouter.get('/', async (req, res) => {
 tracksRouter.post('/', auth, async (req, res, next) => {
     try {
         const tracks = await Track.find({album: req.body.album});
-
+        const user = (req as RequestWithUser).user;
         const newTrack: ITrack = {
             name: req.body.name,
             album: req.body.album,
             duration: req.body.duration,
             number: tracks.length + 1,
+            user: user._id
         }
         const track = new Track(newTrack);
         await track.save();
